@@ -14,7 +14,15 @@ namespace DotCon
             //a.Invoke("dsfs");
            // a.BeginInvoke("aa", CallBack, "1234567890");
             Func<int, int, int> a = Sum;
-            a.BeginInvoke(100, 10, new AsyncCallback(CallBack), "123456");
+            //a.BeginInvoke(100, 10, new AsyncCallback(CallBack), "123456");
+            var endCallback = new AsyncCallback((IAsyncResult iasyn) =>
+            {
+              
+                var asyn = (AsyncResult)iasyn;
+                var result = ((Func<int, int, int>)asyn.AsyncDelegate).EndInvoke(iasyn);
+                OutPut("result:" + result + asyn.AsyncDelegate.ToString());
+            });
+            a.BeginInvoke(100, 10, endCallback, "123456");
             OutPut("main");
             Console.ReadKey();
             
